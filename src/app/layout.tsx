@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   title: "LoanMarket KZ — витрина онлайн-займов",
   description:
     "Сравнение онлайн-займов в Казахстане: суммы, сроки и переход к заявке на сайте кредитора.",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

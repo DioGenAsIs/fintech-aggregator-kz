@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { offersMap } from "@/data/offers";
 
 const fallbackTargets: Record<string, string> = {
   "2291": "https://example.com/offers/2291",
@@ -17,10 +18,14 @@ export function GET(
   { params }: { params: { offerId: string } },
 ) {
   const { offerId } = params;
-  const target = process.env[`OFFER_${offerId}_URL`] ?? fallbackTargets[offerId];
+
+  const target =
+    process.env[`OFFER_${offerId}_URL`] ??
+    offersMap[offerId] ??
+    fallbackTargets[offerId];
 
   if (!target) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/kk", request.url));
   }
 
   const redirectUrl = new URL(target);
