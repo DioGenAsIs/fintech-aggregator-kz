@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { dictionaries, locales } from "@/i18n/dictionaries";
 import { Locale } from "@/data/offers";
 
@@ -34,7 +34,7 @@ export default function LocaleLayout({
   params: { locale: string };
 }) {
   if (!locales.includes(params.locale as Locale)) {
-    redirect("/kk");
+    notFound();
   }
 
   return <>{children}</>;

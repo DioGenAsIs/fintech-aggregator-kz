@@ -14,8 +14,7 @@ const trackEvent = (eventName: string, payload?: Record<string, unknown>) => {
   if (typeof window === "undefined") return;
 
   const eventPayload = { event: eventName, ...payload };
-  const dataLayer = (window as Window & { dataLayer?: Record<string, unknown>[] })
-    .dataLayer;
+  const dataLayer = (window as Window & { dataLayer?: Record<string, unknown>[] }).dataLayer;
 
   if (Array.isArray(dataLayer)) {
     dataLayer.push(eventPayload);
@@ -56,7 +55,8 @@ export function MarketplacePage({ locale, dict }: Props) {
     return [...offers]
       .map((offer, index) => {
         const amountMatch = offer.maxAmount >= selectedAmount ? 2 : 0;
-        const termMatch = offer.maxTerm >= selectedTerm && offer.minTerm <= selectedTerm ? 2 : 0;
+        const termMatch =
+          offer.maxTerm >= selectedTerm && offer.minTerm <= selectedTerm ? 2 : 0;
 
         return {
           offer,
@@ -95,7 +95,10 @@ export function MarketplacePage({ locale, dict }: Props) {
     setIsPersonalized(true);
 
     requestAnimationFrame(() => {
-      document.getElementById("offers")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("offers")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     });
   };
 
@@ -121,17 +124,24 @@ export function MarketplacePage({ locale, dict }: Props) {
             <a href="#faq">{dict.nav.faq}</a>
           </nav>
 
-          <div className="flex items-center text-sm">
+          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 p-1 text-sm">
             <Link
               href="/kk"
-              className={`${locale === "kk" ? "font-semibold text-slate-900" : "text-slate-600 hover:text-slate-900"}`}
+              className={`rounded-lg px-3 py-1.5 ${
+                locale === "kk"
+                  ? "bg-white font-semibold text-slate-900"
+                  : "text-slate-600"
+              }`}
             >
               {dict.lang.kk}
             </Link>
-            <span className="px-2 text-slate-400">|</span>
             <Link
               href="/ru"
-              className={`${locale === "ru" ? "font-semibold text-slate-900" : "text-slate-600 hover:text-slate-900"}`}
+              className={`rounded-lg px-3 py-1.5 ${
+                locale === "ru"
+                  ? "bg-white font-semibold text-slate-900"
+                  : "text-slate-600"
+              }`}
             >
               {dict.lang.ru}
             </Link>
@@ -141,17 +151,22 @@ export function MarketplacePage({ locale, dict }: Props) {
 
       <main className="mx-auto max-w-6xl space-y-10 px-4 py-6 sm:py-8">
         <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-          <h1 className="text-3xl font-bold leading-tight sm:text-4xl">{dict.hero.title}</h1>
+          <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
+            {dict.hero.title}
+          </h1>
+
           <p className="mt-3 text-slate-600">{dict.hero.subtitle}</p>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <label className="space-y-2 text-sm font-medium text-slate-700">
               <span>{dict.hero.amountLabel}</span>
+
               <select
                 value={amountIndex}
                 onChange={(event) => {
                   const nextValue = Number(event.target.value);
                   setAmountIndex(nextValue);
+
                   trackEvent("hero_quiz_amount_select", {
                     locale,
                     value: dict.hero.amountOptions[nextValue],
@@ -169,11 +184,13 @@ export function MarketplacePage({ locale, dict }: Props) {
 
             <label className="space-y-2 text-sm font-medium text-slate-700">
               <span>{dict.hero.termLabel}</span>
+
               <select
                 value={termIndex}
                 onChange={(event) => {
                   const nextValue = Number(event.target.value);
                   setTermIndex(nextValue);
+
                   trackEvent("hero_quiz_term_select", {
                     locale,
                     value: dict.hero.termOptions[nextValue],
@@ -190,16 +207,25 @@ export function MarketplacePage({ locale, dict }: Props) {
             </label>
           </div>
 
-          <Button className="mt-5 h-12 w-full rounded-xl text-base font-semibold" onClick={scrollToOffers}>
+          <Button
+            className="mt-5 h-12 w-full rounded-xl text-base font-semibold"
+            onClick={scrollToOffers}
+          >
             {dict.hero.cta}
           </Button>
         </section>
 
+        {/* OFFERS */}
+
         <section id="offers" className="scroll-mt-24">
           <h2 className="text-2xl font-bold">{personalizedHeading}</h2>
+
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {visibleOffers.map((offer) => (
-              <article key={offer.id} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <article
+                key={offer.id}
+                className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm"
+              >
                 <div className="mb-3 flex items-center gap-3">
                   <Image
                     src={offer.logo}
@@ -209,15 +235,23 @@ export function MarketplacePage({ locale, dict }: Props) {
                     loading="lazy"
                     className="rounded-lg border border-slate-200"
                   />
+
                   <p className="font-semibold">{offer.name}</p>
                 </div>
 
                 <p className="text-lg font-bold">
-                  {dict.offers.maxAmount} {new Intl.NumberFormat(locale === "kk" ? "kk-KZ" : "ru-RU").format(offer.maxAmount)} ₸
+                  {dict.offers.maxAmount}{" "}
+                  {new Intl.NumberFormat(
+                    locale === "kk" ? "kk-KZ" : "ru-RU"
+                  ).format(offer.maxAmount)}{" "}
+                  ₸
                 </p>
+
                 <p className="mt-1 text-sm text-slate-600">
-                  {dict.offers.term}: {offer.minTerm}–{offer.maxTerm} {dict.offers.days}
+                  {dict.offers.term}: {offer.minTerm}–{offer.maxTerm}{" "}
+                  {dict.offers.days}
                 </p>
+
                 <p className="mt-1 text-sm font-medium text-emerald-700">
                   {dict.offers.promoLabel}: {offer.rateText[locale]}
                 </p>
@@ -240,63 +274,8 @@ export function MarketplacePage({ locale, dict }: Props) {
               </article>
             ))}
           </div>
-
-          {visibleCount < sortedOffers.length && (
-            <Button
-              variant="outline"
-              className="mt-5 h-11 rounded-xl"
-              onClick={() => {
-                setVisibleCount((prev) => prev + 3);
-                trackEvent("show_more_click", { locale });
-              }}
-            >
-              {dict.offers.showMore}
-            </Button>
-          )}
-        </section>
-
-        <section id="how-it-works" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-2xl font-bold">{dict.howItWorks.title}</h2>
-          <ol className="mt-4 space-y-3 text-sm text-slate-700">
-            {dict.howItWorks.steps.map((step, index) => (
-              <li key={step} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                {index + 1}. {step}
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-2xl font-bold">{dict.benefits.title}</h2>
-          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-            {dict.benefits.items.map((item) => (
-              <li key={item} className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section id="faq" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h2 className="text-2xl font-bold">{dict.faq.title}</h2>
-          <div className="mt-4 space-y-2">
-            {dict.faq.items.map((item) => (
-              <details key={item.q} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                <summary className="cursor-pointer font-medium">{item.q}</summary>
-                <p className="mt-2 text-sm text-slate-600">{item.a}</p>
-              </details>
-            ))}
-          </div>
         </section>
       </main>
-
-      <footer className="border-t border-slate-200 bg-white">
-        <div className="mx-auto max-w-6xl space-y-2 px-4 py-6 text-sm text-slate-600">
-          <p>{dict.footer.disclaimer}</p>
-          <p>{dict.footer.compliance}</p>
-          <p>{dict.footer.contact}</p>
-        </div>
-      </footer>
     </div>
   );
 }

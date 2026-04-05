@@ -1,0 +1,74 @@
+[
+  {
+    "id": 2291,
+    "name": "2291 Займер KZ - CPS",
+    "brand": "Займер KZ",
+    "goPath": "/go/2291",
+    "loanMinKzt": 10000,
+    "loanMaxKzt": 400000,
+    "termDays": "5–30 дней",
+    "speedHint": "карта ~5 мин",
+    "benefits": ["Онлайн 24/7", "Без визита в офис", "Решение у кредитора"],
+    "cta": "Получить микрокредит"
+  },
+  {
+    "id": 4905,
+    "name": "4905 GoMoney KZ - CPS",
+    "brand": "GoMoney KZ",
+    "goPath": "/go/4905",
+    "loanMinKzt": 20000,
+    "loanMaxKzt": 200000,
+    "termDays": "7–30 дней",
+    "speedHint": "до ~15 мин",
+    "benefits": ["Быстрая анкета", "Ответ по СМС", "Для клиентов 18+"],
+    "cta": "Получить деньги"
+  },
+  {
+    "id": 6288,
+    "name": "6288 Creditbar KZ - CPS",
+    "brand": "Creditbar KZ",
+    "goPath": "/go/6288",
+    "loanMinKzt": 10000,
+    "loanMaxKzt": 400000,
+    "termDays": "5–45 дней",
+    "speedHint": "решение за несколько минут",
+    "benefits": ["Актуальные лимиты", "Подача с телефона", "Без скрытых шагов"],
+    "cta": "Получить микрокредит"
+  },
+  {
+    "id": 6322,
+    "name": "6322 Tengebai KZ - CPS",
+    "brand": "Tengebai",
+    "goPath": "/go/6322",
+    "loanMinKzt": 10000,
+    "loanMaxKzt": 300000,
+    "termDays": "7–30 дней",
+    "speedHint": "1–5 мин",
+    "benefits": ["Короткая форма", "Удобный мобильный UX", "Переход без регистрации"],
+    "cta": "Взять микрокредит"
+  },
+  {
+    "id": 6225,
+    "name": "6225 OneCredit KZ - CPS",
+    "brand": "OneCredit",
+    "goPath": "/go/6225",
+    "loanMinKzt": 20000,
+    "loanMaxKzt": 190000,
+    "termDays": "10–30 дней",
+    "speedHint": "от 5 мин",
+    "benefits": ["Понятные условия", "Проверка онлайн", "Решение у МФО"],
+    "cta": "Получить деньги"
+  },
+  {
+    "id": 3321,
+    "name": "3321 CreditPlus KZ - CPS",
+    "brand": "CreditPlus",
+    "goPath": "/go/3321",
+    "loanMinKzt": 20000,
+    "loanMaxKzt": 280000,
+    "termDays": "7–30 дней",
+    "speedHint": "~7 мин",
+    "benefits": ["Сравнение в одном месте", "Быстрая подача", "Без обещаний одобрения"],
+    "cta": "Оформить микрокредит"
+  }
+]
