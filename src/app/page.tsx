@@ -44,6 +44,13 @@ const faqItems = [
   },
 ];
 
+const pageBuildDate = new Intl.DateTimeFormat("ru-RU", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  timeZone: "UTC",
+}).format(new Date());
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -140,6 +147,9 @@ export default function Home() {
         </section>
 
         <OffersSection offers={offers} />
+        <p className="-mt-10 text-right text-xs text-slate-500">
+          Обновлено: {pageBuildDate} (UTC)
+        </p>
 
         {/* HOW IT WORKS */}
         <section
@@ -257,6 +267,9 @@ export default function Home() {
 
           <p className="text-xs text-slate-500">
             Политика конфиденциальности (placeholder)
+          </p>
+          <p className="text-xs text-slate-500">
+            © {new Date().getFullYear()} LoanMarket KZ
           </p>
         </div>
       </footer>
