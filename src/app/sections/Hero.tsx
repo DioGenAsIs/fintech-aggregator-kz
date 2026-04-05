@@ -82,7 +82,7 @@ export function Hero({ id }: AnimatedProps) {
               className="border-foreground/20 text-foreground hover:bg-foreground/10 px-8 py-6 text-lg rounded-full transition-all duration-300"
             >
               <a
-                href={moneyPlusHref}
+                href="https://go.leadgid.com/aff_c?aff_id=145029&offer_id=6812"
                 target="_blank"
                 rel="noopener noreferrer"
               >
