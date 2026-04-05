@@ -2,7 +2,6 @@ export type Offer = {
   id: string;
   name: string;
   logoText: string;
-  logoIconPath?: string;
   affiliateUrl: string;
   goPath?: string;
   amountMinKzt?: number;
