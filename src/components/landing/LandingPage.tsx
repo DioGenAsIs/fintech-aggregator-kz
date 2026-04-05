@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Messages } from "@/lib/messages";
@@ -7,6 +8,8 @@ import type { Locale, AmountBucket, TermBucket } from "@/lib/i18n";
 import type { Offer } from "@/types/offers";
 import { useOfferSorting } from "@/lib/useOfferSorting";
 import { useAnalytics } from "@/lib/useAnalytics";
+import { buildAffiliateUrl } from "@/lib/affiliate";
+import { trackEvent } from "@/lib/trackEvent";
 
 const badgeToneByIndex = [
   "bg-amber-100 text-amber-800",
@@ -56,6 +59,30 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
   };
 
   const switchHref = locale === "kk" ? "/ru" : "/kk";
+  const offerCards = useMemo(() => {
+    return currentOffers.map((offer, idx) => {
+      const features = locale === "kk" ? offer.featuresKk : offer.featuresRu;
+      const rateText = locale === "kk" ? offer.rateTextKk : offer.rateTextRu;
+      const badge = locale === "kk" ? offer.badgesKk?.[0] : offer.badgesRu?.[0];
+      const affiliateUrl = buildAffiliateUrl({
+        baseUrl: offer.affiliateUrl,
+        offerIdOrName: offer.id,
+        selectedAmount: amount,
+        selectedTerm: term,
+      });
+
+      return {
+        id: offer.id,
+        name: offer.name,
+        badge: badge || (idx === 0 || offer.isTop ? "Лучший выбор" : "Популярный"),
+        amount: `${offer.amountMinKzt?.toLocaleString("ru-RU")}–${offer.maxAmountKzt.toLocaleString("ru-RU")} ₸`,
+        term: `${offer.minTermDays}–${offer.maxTermDays} ${t.offers.days}`,
+        rateText,
+        features,
+        affiliateUrl,
+      };
+    });
+  }, [amount, currentOffers, locale, t.offers.days, term]);
 
   return (
     <div className="min-h-screen bg-[#F2F6FF] text-[#0B1220]">
@@ -167,15 +194,25 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
           <div className="grid gap-4 md:grid-cols-3">
             {currentOffers.map((offer, idx) => {
               const isTop = idx === 0 || offer.isTop;
-              const features = locale === "kk" ? offer.featuresKk : offer.featuresRu;
-              const rate = locale === "kk" ? offer.rateTextKk : offer.rateTextRu;
               const aprText = locale === "kk" ? offer.aprTextKk : offer.aprTextRu;
               const ctaText = locale === "kk" ? offer.ctaTextKk : offer.ctaTextRu;
-              const badge = locale === "kk" ? offer.badgesKk?.[0] : offer.badgesRu?.[0];
               const licenseDisclaimer = locale === "kk" ? offer.licenseDisclaimerKk : offer.licenseDisclaimerRu;
+              const offerCard = offerCards[idx];
+              const affiliateDomain = new URL(offerCard.affiliateUrl).hostname;
+              const trackingPayload = {
+                offer_id: offer.id,
+                offer_name: offer.name,
+                offer_position: idx + 1,
+                affiliate_domain: affiliateDomain,
+                selected_amount: amount,
+                selected_term: term,
+                page_name: "home",
+                timestamp: new Date().toISOString(),
+              };
               return (
                 <article
                   key={offer.id}
+                  onClick={() => trackEvent("offer_card_click", trackingPayload)}
                   className={`rounded-2xl border p-5 transition hover:-translate-y-1 hover:shadow-2xl ${
                     isTop
                       ? "border-[#1F4BFF] bg-gradient-to-b from-white to-blue-50 shadow-xl shadow-blue-200/70"
@@ -184,44 +221,57 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#EAF0FF] font-bold text-[#1F4BFF]">
-                        {offer.logoText}
+                      <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-lg bg-[#EAF0FF] font-bold text-[#1F4BFF]">
+                        {offer.logoIconPath ? (
+                          <Image
+                            src={offer.logoIconPath}
+                            alt={`${offer.name} logo`}
+                            width={36}
+                            height={36}
+                            className="h-9 w-9 object-contain"
+                          />
+                        ) : (
+                          offer.logoText
+                        )}
                       </div>
                       <div>
                         <p className="font-bold text-[#081A4A]">{offer.name}</p>
-                        <p className="text-xs font-medium text-[#1F4BFF]">{t.offers.rate}: {rate}</p>
+                        <p className="text-xs font-medium text-[#1F4BFF]">{t.offers.rate}: {offerCard.rateText}</p>
                       </div>
                     </div>
                     <span className={`rounded-full px-2 py-1 text-xs font-semibold ${badgeToneByIndex[idx % badgeToneByIndex.length]}`}>
-                      {badge || (isTop ? "Лучший выбор" : "Популярный")}
+                      {offerCard.badge}
                     </span>
                   </div>
 
                   <div className="mt-4 rounded-xl border border-[#DCE5FF] bg-white/90 p-3">
                     <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">{t.offers.maxAmount}</p>
-                    <p className="text-2xl font-extrabold text-[#081A4A]">{offer.amountMinKzt?.toLocaleString("ru-RU")}–{offer.maxAmountKzt.toLocaleString("ru-RU")} ₸</p>
-                    <p className="mt-1 text-sm text-[#4B5565]"><b>{t.offers.term}</b> {offer.minTermDays}–{offer.maxTermDays} {t.offers.days}</p>
+                    <p className="text-2xl font-extrabold text-[#081A4A]">{offerCard.amount}</p>
+                    <p className="mt-1 text-sm text-[#4B5565]"><b>{t.offers.term}</b> {offerCard.term}</p>
                     {aprText ? <p className="mt-1 text-xs text-[#4B5565]"><b>{t.offers.apr}:</b> {aprText}</p> : null}
                     {offer.gesvMax ? <p className="mt-1 text-xs text-[#4B5565]">{t.offers.gesv} {offer.gesvMax}%</p> : null}
                   </div>
 
                   <ul className="my-4 list-disc space-y-1 pl-5 text-sm text-[#334155]">
-                    {features.slice(0, 3).map((f) => (
+                    {offerCard.features.slice(0, 3).map((f) => (
                       <li key={f}>{f}</li>
                     ))}
                   </ul>
 
-                  <Link
-                    href={offer.goPath}
+                  <a
+                    href={offerCard.affiliateUrl}
                     target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => track("offer_click", { offerId: offer.id, position: idx + 1, locale })}
+                    rel="nofollow sponsored noopener noreferrer"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      trackEvent("offer_button_click", trackingPayload);
+                    }}
                     className={`flex h-12 items-center justify-center rounded-xl text-sm font-bold text-white transition hover:brightness-110 ${
                       isTop ? "bg-[#123DB9] shadow-xl shadow-blue-300/60" : "bg-[#1F4BFF]"
                     }`}
                   >
                     {ctaText || t.cta.offer}
-                  </Link>
+                  </a>
                   {licenseDisclaimer ? <p className="mt-2 text-[11px] leading-4 text-[#6B7280]">{licenseDisclaimer}</p> : null}
                 </article>
               );

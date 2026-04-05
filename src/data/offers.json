@@ -32,43 +32,54 @@
     "isTop": true,
     "isPopular": true,
     "priority": 96,
-    "badgesRu": ["Топ"],
-    "badgesKk": ["Топ"]
+    "badgesRu": [
+      "Топ"
+    ],
+    "badgesKk": [
+      "Топ"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=2291"
   },
   {
-    "id": "4905",
-    "name": "GoMoney KZ",
-    "logoText": "GM",
-    "goPath": "/go/4905",
-    "amountMinKzt": 20000,
+    "id": "6812",
+    "name": "MoneyPlus KZ",
+    "logoText": "MP",
+    "goPath": "/go/6812",
+    "amountMinKzt": 50000,
     "maxAmountKzt": 200000,
-    "minTermDays": 7,
-    "maxTermDays": 30,
-    "rateTextRu": "Ставка: от 0,10% в день",
-    "rateTextKk": "Мөлшерлеме: күніне 0,10%-дан",
-    "aprTextRu": "ГЭСВ: до 56%",
-    "aprTextKk": "ГЭСВ: 56%-ға дейін",
-    "gesvMax": 56,
+    "minTermDays": 25,
+    "maxTermDays": 365,
+    "rateTextRu": "Ставка: от 0,10%",
+    "rateTextKk": "Мөлшерлеме: 0,10%-дан",
+    "aprTextRu": "ГЭСВ: 43,41%–179%",
+    "aprTextKk": "ЖТСМ: 43,41%–179%",
+    "gesvMax": 179,
     "featuresRu": [
-      "Короткая анкета",
-      "Ответ на сайте МФО",
-      "Подача с телефона",
-      "Сравнение условий перед переходом"
+      "Сумма микрокредита: 50 000–200 000 ₸",
+      "Срок микрокредита: от 25 дней",
+      "Требования: 21+, гражданство РК, банковский счёт/карта",
+      "Онлайн-оформление без длительной регистрации"
     ],
     "featuresKk": [
-      "Қысқа анкета",
-      "Жауап МҚҰ сайтында",
-      "Телефоннан өтінім",
-      "Өтер алдында шарттарды салыстыру"
+      "Микрокредит сомасы: 50 000–200 000 ₸",
+      "Микрокредит мерзімі: 25 күннен бастап",
+      "Талаптар: 21+, ҚР азаматтығы, банк шоты/карта",
+      "Ұзақ тіркеусіз онлайн рәсімдеу"
     ],
-    "ctaTextRu": "Перейти к оформлению",
-    "ctaTextKk": "Рәсімдеуге өту",
-    "licenseDisclaimerRu": "Условия и лицензия указаны на сайте выбранной МФО.",
-    "licenseDisclaimerKk": "Шарттар мен лицензия таңдалған МҚҰ сайтында көрсетілген.",
+    "ctaTextRu": "Оформить микрокредит",
+    "ctaTextKk": "Микрокредитті рәсімдеу",
+    "licenseDisclaimerRu": "Лицензия № 02.23.0017.M от 11.08.2023 г., выдана Управлением региональных представителей в г. Алматы Агентства Республики Казахстан по регулированию и развитию финансовых рынков.",
+    "licenseDisclaimerKk": "Лицензия № 02.23.0017.M, 11.08.2023 ж., Алматы қ. өңірлік өкілдер басқармасы (ҚР Қаржы нарығын реттеу және дамыту агенттігі) берген.",
     "isPopular": true,
     "priority": 88,
-    "badgesRu": ["Быстро"],
-    "badgesKk": ["Жылдам"]
+    "badgesRu": [
+      "Популярный"
+    ],
+    "badgesKk": [
+      "Танымал"
+    ],
+    "affiliateUrl": "https://go.leadgid.com/aff_c?aff_id=145029&offer_id=6812",
+    "logoIconPath": "/offers/moneyplus.svg"
   },
   {
     "id": "6288",
@@ -101,8 +112,13 @@
     "licenseDisclaimerRu": "Условия и лицензия указаны на сайте выбранной МФО.",
     "licenseDisclaimerKk": "Шарттар мен лицензия таңдалған МҚҰ сайтында көрсетілген.",
     "priority": 91,
-    "badgesRu": ["Популярный"],
-    "badgesKk": ["Танымал"]
+    "badgesRu": [
+      "Популярный"
+    ],
+    "badgesKk": [
+      "Танымал"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6288"
   },
   {
     "id": "6322",
@@ -135,8 +151,13 @@
     "licenseDisclaimerRu": "Условия и лицензия указаны на сайте выбранной МФО.",
     "licenseDisclaimerKk": "Шарттар мен лицензия таңдалған МҚҰ сайтында көрсетілген.",
     "priority": 84,
-    "badgesRu": ["Надежно"],
-    "badgesKk": ["Сенімді"]
+    "badgesRu": [
+      "Надежно"
+    ],
+    "badgesKk": [
+      "Сенімді"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6322"
   },
   {
     "id": "6225",
@@ -169,8 +190,13 @@
     "licenseDisclaimerRu": "Условия и лицензия указаны на сайте выбранной МФО.",
     "licenseDisclaimerKk": "Шарттар мен лицензия таңдалған МҚҰ сайтында көрсетілген.",
     "priority": 80,
-    "badgesRu": ["Онлайн"],
-    "badgesKk": ["Онлайн"]
+    "badgesRu": [
+      "Онлайн"
+    ],
+    "badgesKk": [
+      "Онлайн"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6225"
   },
   {
     "id": "3321",
@@ -203,7 +229,12 @@
     "licenseDisclaimerRu": "Условия и лицензия указаны на сайте выбранной МФО.",
     "licenseDisclaimerKk": "Шарттар мен лицензия таңдалған МҚҰ сайтында көрсетілген.",
     "priority": 82,
-    "badgesRu": ["Выбор"],
-    "badgesKk": ["Таңдау"]
+    "badgesRu": [
+      "Выбор"
+    ],
+    "badgesKk": [
+      "Таңдау"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=3321"
   }
 ]
