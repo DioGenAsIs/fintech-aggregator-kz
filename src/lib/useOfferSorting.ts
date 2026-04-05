@@ -13,42 +13,19 @@ export function useOfferSorting(
     const selectedAmount = amountBucketMap[amountBucket];
     const selectedTerm = termBucketMap[termBucket];
 
-    const exactMatches = offers.filter(
-      (offer) => offer.maxAmount >= selectedAmount && offer.maxTerm >= selectedTerm,
-    );
-
-    if (exactMatches.length > 0) {
-      return [...exactMatches].sort(
-        (a, b) => getMatchScore(b, selectedAmount, selectedTerm) - getMatchScore(a, selectedAmount, selectedTerm),
-      );
-    }
-
     return [...offers].sort((a, b) => {
-      const distanceA = getDistance(a, selectedAmount, selectedTerm);
-      const distanceB = getDistance(b, selectedAmount, selectedTerm);
-
-      if (distanceA !== distanceB) {
-        return distanceA - distanceB;
-      }
-
-      return b.priority - a.priority;
+      const scoreA = getScore(a, selectedAmount, selectedTerm);
+      const scoreB = getScore(b, selectedAmount, selectedTerm);
+      return scoreB - scoreA;
     });
   }, [offers, amountBucket, termBucket]);
 }
 
-function getMatchScore(offer: Offer, selectedAmount: number, selectedTerm: number) {
-  const amountHeadroom = offer.maxAmount - selectedAmount;
-  const termHeadroom = offer.maxTerm - selectedTerm;
-  const promoBoost = offer.badgesRu?.length || offer.badgesKk?.length ? 4 : 0;
+function getScore(offer: Offer, selectedAmount: number, selectedTerm: number) {
+  const amountMatch = offer.maxAmountKzt >= selectedAmount ? 40 : 0;
+  const termMatch =
+    selectedTerm >= offer.minTermDays && selectedTerm <= offer.maxTermDays ? 50 : 0;
+  const badgeBoost = offer.badgesRu?.length || offer.badgesKk?.length ? 5 : 0;
 
-  return offer.priority * 2 + amountHeadroom * 0.00008 + termHeadroom * 0.3 + promoBoost;
-}
-
-function getDistance(offer: Offer, selectedAmount: number, selectedTerm: number) {
-  const amountOverflow = Math.max(0, selectedAmount - offer.maxAmount);
-  const amountUnderflow = Math.max(0, offer.minAmount - selectedAmount);
-  const termOverflow = Math.max(0, selectedTerm - offer.maxTerm);
-  const termUnderflow = Math.max(0, offer.minTerm - selectedTerm);
-
-  return amountOverflow * 0.001 + amountUnderflow * 0.0005 + termOverflow * 2 + termUnderflow;
+  return termMatch + amountMatch + offer.priority * 0.1 + badgeBoost;
 }
