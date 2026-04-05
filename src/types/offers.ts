@@ -3,10 +3,9 @@ export type Offer = {
   name: string;
   logoText: string;
   goPath: string;
-  minAmount: number;
-  maxAmount: number;
-  minTerm: number;
-  maxTerm: number;
+  maxAmountKzt: number;
+  minTermDays: number;
+  maxTermDays: number;
   rateTextRu: string;
   rateTextKk: string;
   gesvMax?: number;
