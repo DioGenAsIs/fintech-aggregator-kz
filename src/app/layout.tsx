@@ -9,9 +9,9 @@ const geistSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "LoanMarket KZ — CPA loan showcase",
+  title: "LoanMarket KZ — подбор микрокредитов",
   description:
-    "Быстрый двуязычный подбор онлайн-займов в Казахстане с переходом на сайт кредитора.",
+    "Двуязычный подбор микрокредитов в Казахстане с переходом на сайт выбранной МФО.",
 };
 
 export default function RootLayout({
