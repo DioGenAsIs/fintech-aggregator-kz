@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Messages } from "@/lib/messages";
 import type { Locale, AmountBucket, TermBucket } from "@/lib/i18n";
@@ -25,10 +24,6 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
   const sorted = useOfferSorting(offers, amount, term);
   const currentOffers = useMemo(() => sorted.slice(0, visible), [sorted, visible]);
   const t = messages;
-
-  useEffect(() => {
-    setVisible(3);
-  }, [amount, term]);
 
   useEffect(() => {
     track("offers_view", { amountBucket: amount, termBucket: term });
@@ -76,7 +71,7 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
         <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-[#081A4A] via-[#0B2A78] to-[#1F4BFF] p-6 text-white shadow-2xl shadow-blue-900/35 sm:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-blue-200">{t.hero.eyebrow}</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-blue-200">CPA Marketplace Kazakhstan</p>
               <h1 className="mt-3 text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
                 {t.hero.title}
               </h1>
@@ -152,71 +147,64 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
             </div>
           </div>
 
-          <motion.div layout className="grid min-h-[320px] gap-4 md:grid-cols-3">
-            <AnimatePresence mode="popLayout">
-              {currentOffers.map((offer, idx) => {
-                const isTop = idx === 0;
-                const features = locale === "kk" ? offer.featuresKk : offer.featuresRu;
-                const rate = locale === "kk" ? offer.rateTextKk : offer.rateTextRu;
-                const badge = locale === "kk" ? offer.badgesKk?.[0] : offer.badgesRu?.[0];
-                return (
-                  <motion.article
-                    layout
-                    key={offer.id}
-                    initial={{ opacity: 0, y: 16, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -12, scale: 0.98 }}
-                    transition={{ duration: 0.22, ease: "easeOut" }}
-                    className={`rounded-2xl border p-5 transition hover:-translate-y-1 hover:shadow-2xl ${
-                      isTop
-                        ? "border-[#1F4BFF] bg-gradient-to-b from-white to-blue-50 shadow-xl shadow-blue-200/70"
-                        : "border-[#DCE5FF] bg-white shadow-lg shadow-blue-100/60"
+          <div className="grid gap-4 md:grid-cols-3">
+            {currentOffers.map((offer, idx) => {
+              const isTop = idx === 0;
+              const features = locale === "kk" ? offer.featuresKk : offer.featuresRu;
+              const rate = locale === "kk" ? offer.rateTextKk : offer.rateTextRu;
+              const badge = locale === "kk" ? offer.badgesKk?.[0] : offer.badgesRu?.[0];
+              return (
+                <article
+                  key={offer.id}
+                  className={`rounded-2xl border p-5 transition hover:-translate-y-1 hover:shadow-2xl ${
+                    isTop
+                      ? "border-[#1F4BFF] bg-gradient-to-b from-white to-blue-50 shadow-xl shadow-blue-200/70"
+                      : "border-[#DCE5FF] bg-white shadow-lg shadow-blue-100/60"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#EAF0FF] font-bold text-[#1F4BFF]">
+                        {offer.logoText}
+                      </div>
+                      <div>
+                        <p className="font-bold text-[#081A4A]">{offer.name}</p>
+                        <p className="text-xs font-medium text-[#1F4BFF]">{rate}</p>
+                      </div>
+                    </div>
+                    <span className={`rounded-full px-2 py-1 text-xs font-semibold ${badgeToneByIndex[idx % badgeToneByIndex.length]}`}>
+                      {badge || (isTop ? "Лучший выбор" : "Популярный")}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 rounded-xl border border-[#DCE5FF] bg-white/90 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">{t.offers.maxAmount}</p>
+                    <p className="text-2xl font-extrabold text-[#081A4A]">{offer.maxAmountKzt.toLocaleString("ru-RU")} ₸</p>
+                    <p className="mt-1 text-sm text-[#4B5565]"><b>{t.offers.term}</b> {offer.minTermDays}–{offer.maxTermDays} {t.offers.days}</p>
+                    {offer.gesvMax ? <p className="mt-1 text-xs text-[#4B5565]">{t.offers.gesv} {offer.gesvMax}%</p> : null}
+                  </div>
+
+                  <ul className="my-4 list-disc space-y-1 pl-5 text-sm text-[#334155]">
+                    {features.slice(0, 3).map((f) => (
+                      <li key={f}>{f}</li>
+                    ))}
+                  </ul>
+
+                  <Link
+                    href={offer.goPath}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => track("offer_click", { offerId: offer.id, position: idx + 1, locale })}
+                    className={`flex h-12 items-center justify-center rounded-xl text-sm font-bold text-white transition hover:brightness-110 ${
+                      isTop ? "bg-[#123DB9] shadow-xl shadow-blue-300/60" : "bg-[#1F4BFF]"
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#EAF0FF] font-bold text-[#1F4BFF]">
-                          {offer.logoText}
-                        </div>
-                        <div>
-                          <p className="font-bold text-[#081A4A]">{offer.name}</p>
-                          <p className="text-xs font-medium text-[#1F4BFF]">{rate}</p>
-                        </div>
-                      </div>
-                      <span className={`rounded-full px-2 py-1 text-xs font-semibold ${badgeToneByIndex[idx % badgeToneByIndex.length]}`}>
-                        {badge || (isTop ? "Лучший выбор" : "Популярный")}
-                      </span>
-                    </div>
-
-                    <div className="mt-4 rounded-xl border border-[#DCE5FF] bg-white/90 p-3">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">{t.offers.maxAmount}</p>
-                      <p className="text-2xl font-extrabold text-[#081A4A]">{offer.maxAmount.toLocaleString("ru-RU")} ₸</p>
-                      <p className="mt-1 text-sm text-[#4B5565]"><b>{t.offers.term}</b> {offer.minTerm}–{offer.maxTerm} {t.offers.days}</p>
-                      {offer.gesvMax ? <p className="mt-1 text-xs text-[#4B5565]">{t.offers.gesv} {offer.gesvMax}%</p> : null}
-                    </div>
-
-                    <ul className="my-4 list-disc space-y-1 pl-5 text-sm text-[#334155]">
-                      {features.slice(0, 3).map((f) => (
-                        <li key={f}>{f}</li>
-                      ))}
-                    </ul>
-
-                    <Link
-                      href={offer.goPath}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => track("offer_click", { offerId: offer.id, position: idx + 1, locale })}
-                      className={`flex h-12 items-center justify-center rounded-xl text-sm font-bold text-white transition hover:brightness-110 ${
-                        isTop ? "bg-[#123DB9] shadow-xl shadow-blue-300/60" : "bg-[#1F4BFF]"
-                      }`}
-                    >
-                      {t.cta.offer}
-                    </Link>
-                  </motion.article>
-                );
-              })}
-            </AnimatePresence>
-          </motion.div>
+                    {t.cta.offer}
+                  </Link>
+                </article>
+              );
+            })}
+          </div>
 
           {visible < sorted.length ? (
             <button
