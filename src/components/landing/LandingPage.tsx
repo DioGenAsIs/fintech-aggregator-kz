@@ -20,10 +20,23 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
   const [amount, setAmount] = useState<AmountBucket>("100k");
   const [term, setTerm] = useState<TermBucket>("14");
   const [visible, setVisible] = useState(3);
+  const [isFiltered, setIsFiltered] = useState(false);
   const offersRef = useRef<HTMLElement>(null);
   const sorted = useOfferSorting(offers, amount, term);
   const currentOffers = useMemo(() => sorted.slice(0, visible), [sorted, visible]);
   const t = messages;
+  const selectedAmountLabel = {
+    "50k": t.quiz.amount_50k,
+    "100k": t.quiz.amount_100k,
+    "200k": t.quiz.amount_200k,
+    "200k_plus": t.quiz.amount_200k_plus,
+  }[amount];
+  const selectedTermLabel = {
+    "7": t.quiz.term_7,
+    "14": t.quiz.term_14,
+    "30": t.quiz.term_30,
+    "30_plus": t.quiz.term_30_plus,
+  }[term];
 
   useEffect(() => {
     track("offers_view", { amountBucket: amount, termBucket: term });
@@ -37,6 +50,8 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
 
   const onSubmit = () => {
     track("hero_cta_click", { amountBucket: amount, termBucket: term });
+    setIsFiltered(true);
+    setVisible(3);
     offersRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -68,27 +83,26 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
       </header>
 
       <main id="top" className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-6 sm:py-10">
-        <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-[#081A4A] via-[#0B2A78] to-[#1F4BFF] p-6 text-white shadow-2xl shadow-blue-900/35 sm:p-10">
+        <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-[#041135] via-[#0A2368] to-[#1F4BFF] p-6 text-white shadow-2xl shadow-blue-900/35 sm:p-10">
           <div className="grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-blue-200">CPA Marketplace Kazakhstan</p>
+            <div className="pr-2">
+              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-blue-200">{t.hero.eyebrow}</p>
               <h1 className="mt-3 text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
                 {t.hero.title}
               </h1>
-              <p className="mt-4 max-w-xl text-base text-blue-100 sm:text-lg">{t.hero.subtitle}</p>
+              <p className="mt-5 max-w-xl text-base text-blue-100 sm:text-lg">{t.hero.subtitle}</p>
 
-              <ul className="mt-6 grid gap-2 text-sm sm:grid-cols-2">
+              <ul className="mt-8 grid gap-2 text-sm sm:grid-cols-2">
                 {t.hero.bullets.map((b) => (
                   <li key={b} className="rounded-full border border-white/20 bg-white/10 px-3 py-2 text-center font-medium text-white">
                     {b}
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-xs text-blue-100/90">{t.hero.disclaimer}</p>
             </div>
 
-            <div className="rounded-2xl border border-white/30 bg-white p-5 text-[#0B1220] shadow-2xl shadow-[#01091f]/30 sm:p-6">
-              <p className="text-sm font-semibold text-[#1F4BFF]">{t.hero.howLink}</p>
+            <div className="rounded-3xl border border-white/20 bg-white p-6 text-[#0B1220] shadow-2xl shadow-[#01091f]/40 sm:p-7">
+              <a href="#how" className="text-sm font-semibold text-[#1F4BFF] underline decoration-dotted underline-offset-4">{t.hero.howLink}</a>
               <div className="mt-4 grid gap-3">
                 <label className="text-sm font-semibold">
                   {t.quiz.amount}
@@ -135,6 +149,8 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
               >
                 {t.cta.primary}
               </button>
+              <p className="mt-3 text-xs text-[#5B6475]">{t.hero.selectionDisclaimer}</p>
+              <p className="mt-2 text-xs text-[#5B6475]">{t.hero.disclaimer}</p>
             </div>
           </div>
         </section>
@@ -145,14 +161,18 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
               <h2 className="text-3xl font-extrabold tracking-tight text-[#081A4A]">{t.offers.title}</h2>
               <p className="mt-1 text-sm font-medium text-[#4B5565]">{t.offers.subtitle}</p>
             </div>
+            {isFiltered ? <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-[#123DB9]">{selectedAmountLabel} · {selectedTermLabel}</span> : null}
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
             {currentOffers.map((offer, idx) => {
-              const isTop = idx === 0;
+              const isTop = idx === 0 || offer.isTop;
               const features = locale === "kk" ? offer.featuresKk : offer.featuresRu;
               const rate = locale === "kk" ? offer.rateTextKk : offer.rateTextRu;
+              const aprText = locale === "kk" ? offer.aprTextKk : offer.aprTextRu;
+              const ctaText = locale === "kk" ? offer.ctaTextKk : offer.ctaTextRu;
               const badge = locale === "kk" ? offer.badgesKk?.[0] : offer.badgesRu?.[0];
+              const licenseDisclaimer = locale === "kk" ? offer.licenseDisclaimerKk : offer.licenseDisclaimerRu;
               return (
                 <article
                   key={offer.id}
@@ -169,7 +189,7 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
                       </div>
                       <div>
                         <p className="font-bold text-[#081A4A]">{offer.name}</p>
-                        <p className="text-xs font-medium text-[#1F4BFF]">{rate}</p>
+                        <p className="text-xs font-medium text-[#1F4BFF]">{t.offers.rate}: {rate}</p>
                       </div>
                     </div>
                     <span className={`rounded-full px-2 py-1 text-xs font-semibold ${badgeToneByIndex[idx % badgeToneByIndex.length]}`}>
@@ -179,8 +199,9 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
 
                   <div className="mt-4 rounded-xl border border-[#DCE5FF] bg-white/90 p-3">
                     <p className="text-xs font-semibold uppercase tracking-wide text-[#64748B]">{t.offers.maxAmount}</p>
-                    <p className="text-2xl font-extrabold text-[#081A4A]">{offer.maxAmountKzt.toLocaleString("ru-RU")} ₸</p>
+                    <p className="text-2xl font-extrabold text-[#081A4A]">{offer.amountMinKzt?.toLocaleString("ru-RU")}–{offer.maxAmountKzt.toLocaleString("ru-RU")} ₸</p>
                     <p className="mt-1 text-sm text-[#4B5565]"><b>{t.offers.term}</b> {offer.minTermDays}–{offer.maxTermDays} {t.offers.days}</p>
+                    {aprText ? <p className="mt-1 text-xs text-[#4B5565]"><b>{t.offers.apr}:</b> {aprText}</p> : null}
                     {offer.gesvMax ? <p className="mt-1 text-xs text-[#4B5565]">{t.offers.gesv} {offer.gesvMax}%</p> : null}
                   </div>
 
@@ -199,8 +220,9 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
                       isTop ? "bg-[#123DB9] shadow-xl shadow-blue-300/60" : "bg-[#1F4BFF]"
                     }`}
                   >
-                    {t.cta.offer}
+                    {ctaText || t.cta.offer}
                   </Link>
+                  {licenseDisclaimer ? <p className="mt-2 text-[11px] leading-4 text-[#6B7280]">{licenseDisclaimer}</p> : null}
                 </article>
               );
             })}
