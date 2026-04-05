@@ -9,8 +9,9 @@ const geistSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "LoanMarket KZ",
-  description: "Онлайн витрина займов по Казахстану.",
+  title: "LoanMarket KZ — витрина онлайн-займов",
+  description:
+    "Сравнение онлайн-займов в Казахстане: суммы, сроки и переход к заявке на сайте кредитора.",
   icons: {
     icon: "/icon.svg",
     shortcut: "/icon.svg",
@@ -24,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="kk">
+    <html lang="ru">
       <body className={`${geistSans.variable} antialiased`}>{children}</body>
     </html>
   );
