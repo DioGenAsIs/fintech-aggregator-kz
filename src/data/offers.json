@@ -32,8 +32,13 @@
     "isTop": true,
     "isPopular": true,
     "priority": 96,
-    "badgesRu": ["Топ"],
-    "badgesKk": ["Топ"]
+    "badgesRu": [
+      "Топ"
+    ],
+    "badgesKk": [
+      "Топ"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=2291"
   },
   {
     "id": "4905",
@@ -67,8 +72,13 @@
     "licenseDisclaimerKk": "Шарттар мен лицензия таңдалған МҚҰ сайтында көрсетілген.",
     "isPopular": true,
     "priority": 88,
-    "badgesRu": ["Быстро"],
-    "badgesKk": ["Жылдам"]
+    "badgesRu": [
+      "Быстро"
+    ],
+    "badgesKk": [
+      "Жылдам"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=4905"
   },
   {
     "id": "6288",
@@ -101,8 +111,13 @@
     "licenseDisclaimerRu": "Условия и лицензия указаны на сайте выбранной МФО.",
     "licenseDisclaimerKk": "Шарттар мен лицензия таңдалған МҚҰ сайтында көрсетілген.",
     "priority": 91,
-    "badgesRu": ["Популярный"],
-    "badgesKk": ["Танымал"]
+    "badgesRu": [
+      "Популярный"
+    ],
+    "badgesKk": [
+      "Танымал"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6288"
   },
   {
     "id": "6322",
@@ -135,8 +150,13 @@
     "licenseDisclaimerRu": "Условия и лицензия указаны на сайте выбранной МФО.",
     "licenseDisclaimerKk": "Шарттар мен лицензия таңдалған МҚҰ сайтында көрсетілген.",
     "priority": 84,
-    "badgesRu": ["Надежно"],
-    "badgesKk": ["Сенімді"]
+    "badgesRu": [
+      "Надежно"
+    ],
+    "badgesKk": [
+      "Сенімді"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6322"
   },
   {
     "id": "6225",
@@ -169,8 +189,13 @@
     "licenseDisclaimerRu": "Условия и лицензия указаны на сайте выбранной МФО.",
     "licenseDisclaimerKk": "Шарттар мен лицензия таңдалған МҚҰ сайтында көрсетілген.",
     "priority": 80,
-    "badgesRu": ["Онлайн"],
-    "badgesKk": ["Онлайн"]
+    "badgesRu": [
+      "Онлайн"
+    ],
+    "badgesKk": [
+      "Онлайн"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6225"
   },
   {
     "id": "3321",
@@ -203,7 +228,12 @@
     "licenseDisclaimerRu": "Условия и лицензия указаны на сайте выбранной МФО.",
     "licenseDisclaimerKk": "Шарттар мен лицензия таңдалған МҚҰ сайтында көрсетілген.",
     "priority": 82,
-    "badgesRu": ["Выбор"],
-    "badgesKk": ["Таңдау"]
+    "badgesRu": [
+      "Выбор"
+    ],
+    "badgesKk": [
+      "Таңдау"
+    ],
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=3321"
   }
 ]
