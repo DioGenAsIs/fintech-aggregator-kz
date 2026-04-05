@@ -1,9 +1,11 @@
 export type Offer = {
   id: string;
   name: string;
+  slug: string;
   logoText: string;
-  affiliateUrl: string;
   goPath?: string;
+  trackingSub2?: string;
+  trackingSub4?: string;
   amountMinKzt?: number;
   maxAmountKzt: number;
   minTermDays: number;

@@ -3,12 +3,15 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { buildOfferTrackingUrl, TRACKING_SITE } from "@/lib/buildOfferTrackingUrl";
 
 type Offer = {
   id: number;
   name: string;
   brand: string;
+  slug: string;
   goPath: string;
+  trackingSub2?: string;
   loanMinKzt: number;
   loanMaxKzt: number;
   termDays: string;
@@ -54,6 +57,7 @@ export function OffersSection({ offers }: { offers: Offer[] }) {
   }, [offers, sortBy]);
 
   const visibleOffers = sortedOffers.slice(0, visibleCount);
+  const page = "home_ru";
 
   return (
     <section id="offers" className="scroll-mt-24">
@@ -138,10 +142,26 @@ export function OffersSection({ offers }: { offers: Offer[] }) {
 
             <div className="space-y-2">
               <Button asChild className="w-full rounded-xl text-base font-semibold">
-                <Link href={offer.goPath}>{offer.cta}</Link>
+                <Link
+                  href={buildOfferTrackingUrl({
+                    offerId: String(offer.id),
+                    site: TRACKING_SITE,
+                    placement: offer.trackingSub2 === "top_list" ? "top_list" : "card",
+                    offerSlug: offer.slug,
+                    page,
+                  })}
+                >
+                  {offer.cta}
+                </Link>
               </Button>
               <Link
-                href={offer.goPath}
+                href={buildOfferTrackingUrl({
+                  offerId: String(offer.id),
+                  site: TRACKING_SITE,
+                  placement: "card",
+                  offerSlug: offer.slug,
+                  page,
+                })}
                 className="block text-center text-sm text-slate-600 underline underline-offset-4 hover:text-slate-900"
               >
                 Подробнее

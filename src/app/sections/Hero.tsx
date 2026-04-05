@@ -1,10 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { buildOfferTrackingUrl, TRACKING_SITE } from "@/lib/buildOfferTrackingUrl";
 import type { AnimatedProps } from "@/types/motion";
 import { motion } from "framer-motion";
 
 export function Hero({ id }: AnimatedProps) {
+  const moneyPlusHref = buildOfferTrackingUrl({
+    offerId: "6812",
+    site: TRACKING_SITE,
+    placement: "hero",
+    offerSlug: "moneyplus",
+    page: "home_ru",
+  });
+
   return (
     <section
       id={id}
@@ -73,11 +82,11 @@ export function Hero({ id }: AnimatedProps) {
               className="border-foreground/20 text-foreground hover:bg-foreground/10 px-8 py-6 text-lg rounded-full transition-all duration-300"
             >
               <a
-                href="https://github.com/anibalalpizar/nextjs-shadcn-landing"
+                href={moneyPlusHref}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Code Source
+                MoneyPlus KZ
               </a>
             </Button>
           </motion.div>

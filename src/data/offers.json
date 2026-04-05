@@ -38,7 +38,9 @@
     "badgesKk": [
       "Топ"
     ],
-    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=2291"
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=2291",
+    "slug": "zaimer",
+    "trackingSub2": "card"
   },
   {
     "id": "4905",
@@ -78,7 +80,9 @@
     "badgesKk": [
       "Жылдам"
     ],
-    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=4905"
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=4905",
+    "slug": "gomoney",
+    "trackingSub2": "card"
   },
   {
     "id": "6288",
@@ -117,7 +121,9 @@
     "badgesKk": [
       "Танымал"
     ],
-    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6288"
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6288",
+    "slug": "creditbar",
+    "trackingSub2": "card"
   },
   {
     "id": "6322",
@@ -156,7 +162,9 @@
     "badgesKk": [
       "Сенімді"
     ],
-    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6322"
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6322",
+    "slug": "tengebai",
+    "trackingSub2": "card"
   },
   {
     "id": "6225",
@@ -195,7 +203,9 @@
     "badgesKk": [
       "Онлайн"
     ],
-    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6225"
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=6225",
+    "slug": "onecredit",
+    "trackingSub2": "card"
   },
   {
     "id": "3321",
@@ -234,6 +244,8 @@
     "badgesKk": [
       "Таңдау"
     ],
-    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=3321"
+    "affiliateUrl": "https://go.leadgid.kz/aff_c?aff_id=145029&offer_id=3321",
+    "slug": "creditplus",
+    "trackingSub2": "card"
   }
 ]

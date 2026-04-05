@@ -7,7 +7,7 @@ import type { Locale, AmountBucket, TermBucket } from "@/lib/i18n";
 import type { Offer } from "@/types/offers";
 import { useOfferSorting } from "@/lib/useOfferSorting";
 import { useAnalytics } from "@/lib/useAnalytics";
-import { buildAffiliateUrl } from "@/lib/affiliate";
+import { buildOfferTrackingUrl, TRACKING_SITE } from "@/lib/buildOfferTrackingUrl";
 import { trackEvent } from "@/lib/trackEvent";
 
 const badgeToneByIndex = [
@@ -58,30 +58,45 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
   };
 
   const switchHref = locale === "kk" ? "/ru" : "/kk";
+  const pageTag = locale === "kk" ? "home_kz" : "home_ru";
+  const heroOffer = sorted[0];
+  const heroOfferHref = heroOffer
+    ? buildOfferTrackingUrl({
+        offerId: heroOffer.id,
+        site: TRACKING_SITE,
+        placement: "hero",
+        offerSlug: heroOffer.slug,
+        page: pageTag,
+      })
+    : null;
+
   const offerCards = useMemo(() => {
     return currentOffers.map((offer, idx) => {
       const features = locale === "kk" ? offer.featuresKk : offer.featuresRu;
       const rateText = locale === "kk" ? offer.rateTextKk : offer.rateTextRu;
       const badge = locale === "kk" ? offer.badgesKk?.[0] : offer.badgesRu?.[0];
-      const affiliateUrl = buildAffiliateUrl({
-        baseUrl: offer.affiliateUrl,
-        offerIdOrName: offer.id,
-        selectedAmount: amount,
-        selectedTerm: term,
+      const trackingPlacement = offer.trackingSub2 === "top_list" ? "top_list" : "card";
+      const offerHref = buildOfferTrackingUrl({
+        offerId: offer.id,
+        site: TRACKING_SITE,
+        placement: trackingPlacement,
+        offerSlug: offer.slug,
+        page: pageTag,
       });
 
       return {
         id: offer.id,
         name: offer.name,
+        trackingPlacement,
         badge: badge || (idx === 0 || offer.isTop ? "Лучший выбор" : "Популярный"),
         amount: `${offer.amountMinKzt?.toLocaleString("ru-RU")}–${offer.maxAmountKzt.toLocaleString("ru-RU")} ₸`,
         term: `${offer.minTermDays}–${offer.maxTermDays} ${t.offers.days}`,
         rateText,
         features,
-        affiliateUrl,
+        offerHref,
       };
     });
-  }, [amount, currentOffers, locale, t.offers.days, term]);
+  }, [currentOffers, locale, pageTag, t.offers.days]);
 
   return (
     <div className="min-h-screen bg-[#F2F6FF] text-[#0B1220]">
@@ -175,6 +190,22 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
               >
                 {t.cta.primary}
               </button>
+              {heroOfferHref ? (
+                <a
+                  href={heroOfferHref}
+                  className="mt-3 flex h-11 w-full items-center justify-center rounded-xl border border-[#1F4BFF] bg-white font-semibold text-[#1F4BFF] transition hover:bg-blue-50"
+                  onClick={() =>
+                    track("hero_offer_click", {
+                      offerId: heroOffer.id,
+                      offerSlug: heroOffer.slug,
+                      placement: "hero",
+                      page: pageTag,
+                    })
+                  }
+                >
+                  {t.cta.offer}
+                </a>
+              ) : null}
               <p className="mt-3 text-xs text-[#5B6475]">{t.hero.selectionDisclaimer}</p>
               <p className="mt-2 text-xs text-[#5B6475]">{t.hero.disclaimer}</p>
             </div>
@@ -197,12 +228,14 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
               const ctaText = locale === "kk" ? offer.ctaTextKk : offer.ctaTextRu;
               const licenseDisclaimer = locale === "kk" ? offer.licenseDisclaimerKk : offer.licenseDisclaimerRu;
               const offerCard = offerCards[idx];
-              const affiliateDomain = new URL(offerCard.affiliateUrl).hostname;
               const trackingPayload = {
                 offer_id: offer.id,
                 offer_name: offer.name,
+                offer_slug: offer.slug,
                 offer_position: idx + 1,
-                affiliate_domain: affiliateDomain,
+                tracking_site: TRACKING_SITE,
+                tracking_sub2: offerCard.trackingPlacement,
+                tracking_sub4: pageTag,
                 selected_amount: amount,
                 selected_term: term,
                 page_name: "home",
@@ -248,9 +281,7 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
                   </ul>
 
                   <a
-                    href={offerCard.affiliateUrl}
-                    target="_blank"
-                    rel="nofollow sponsored noopener noreferrer"
+                    href={offerCard.offerHref}
                     onClick={(event) => {
                       event.stopPropagation();
                       trackEvent("offer_button_click", trackingPayload);
