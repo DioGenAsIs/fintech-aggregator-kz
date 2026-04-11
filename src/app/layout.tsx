@@ -6,6 +6,8 @@ import "./globals.css";
 import { AnalyticsRouteTracker } from "@/components/analytics/AnalyticsRouteTracker";
 import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 
+const GOOGLE_SITE_VERIFICATION = "y9EdwPcxbsZKW6XOhUYAS2aNgDl-bbBO8fxKkE-xMPg";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -17,7 +19,7 @@ export const metadata: Metadata = {
   description:
     "Быстрый двуязычный подбор онлайн-займов в Казахстане с переходом на сайт кредитора.",
   verification: {
-    google: "y9EdwPcxbsZKW6XOhUYAS2aNgDl-bbBO8fxKkE-xMPg",
+    google: GOOGLE_SITE_VERIFICATION,
   },
 };
 
