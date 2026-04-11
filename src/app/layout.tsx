@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "LoanMarket KZ — CPA loan showcase",
   description:
     "Быстрый двуязычный подбор онлайн-займов в Казахстане с переходом на сайт кредитора.",
+  verification: {
+    google: "y9EdwPcxbsZKW6XOhUYAS2aNgDl-bbBO8fxKkE-xMPg",
+  },
 };
 
 export default function RootLayout({
