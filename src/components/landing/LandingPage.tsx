@@ -8,7 +8,12 @@ import type { Offer } from "@/types/offers";
 import { useOfferSorting } from "@/lib/useOfferSorting";
 import { useAnalytics } from "@/lib/useAnalytics";
 import { buildAffiliateUrl } from "@/lib/affiliate";
-import { trackEvent } from "@/lib/trackEvent";
+import { trackEvent } from "@/lib/analytics";
+import {
+  getAlternateLocaleConfig,
+  getLocaleLandingConfigs,
+  type LandingPageSeoConfig,
+} from "@/lib/landingConfigs";
 
 const badgeToneByIndex = [
   "bg-amber-100 text-amber-800",
@@ -17,7 +22,17 @@ const badgeToneByIndex = [
   "bg-violet-100 text-violet-800",
 ];
 
-export function LandingPage({ locale, messages, offers }: { locale: Locale; messages: Messages; offers: Offer[] }) {
+export function LandingPage({
+  locale,
+  messages,
+  offers,
+  seoConfig,
+}: {
+  locale: Locale;
+  messages: Messages;
+  offers: Offer[];
+  seoConfig?: LandingPageSeoConfig;
+}) {
   const track = useAnalytics();
   const [amount, setAmount] = useState<AmountBucket>("100k");
   const [term, setTerm] = useState<TermBucket>("14");
@@ -27,6 +42,11 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
   const sorted = useOfferSorting(offers, amount, term);
   const currentOffers = useMemo(() => sorted.slice(0, visible), [sorted, visible]);
   const t = messages;
+  const pageName = seoConfig?.slug ?? "home";
+  const faqItems = seoConfig?.faqOverrides ?? t.faq.items;
+  const localePages = getLocaleLandingConfigs(locale);
+  const alternateLocaleConfig = seoConfig ? getAlternateLocaleConfig(seoConfig) : null;
+
   const selectedAmountLabel = {
     "50k": t.quiz.amount_50k,
     "100k": t.quiz.amount_100k,
@@ -41,17 +61,30 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
   }[term];
 
   useEffect(() => {
-    track("offers_view", { amountBucket: amount, termBucket: term });
-  }, [amount, term, track]);
+    track("offers_view", { amountBucket: amount, termBucket: term, locale, page_name: pageName });
+  }, [amount, term, track, locale, pageName]);
 
   useEffect(() => {
     currentOffers.forEach((offer, index) => {
-      track("offer_impression", { offerId: offer.id, position: index + 1 });
+      track("offer_impression", {
+        offer_id: offer.id,
+        offer_name: offer.name,
+        offer_position: index + 1,
+        selected_amount: amount,
+        selected_term: term,
+        locale,
+        page_name: pageName,
+      });
     });
-  }, [currentOffers, track]);
+  }, [amount, currentOffers, locale, pageName, term, track]);
 
   const onSubmit = () => {
-    track("hero_cta_click", { amountBucket: amount, termBucket: term });
+    track("hero_cta_click", {
+      selected_amount: amount,
+      selected_term: term,
+      locale,
+      page_name: pageName,
+    });
     setIsFiltered(true);
     setVisible(3);
     offersRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -96,7 +129,14 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
           <div className="flex items-center gap-3">
             <Link
               href={switchHref}
-              onClick={() => track("language_switch", { from: locale, to: locale === "kk" ? "ru" : "kk" })}
+              onClick={() =>
+                track("language_switch", {
+                  from: locale,
+                  to: locale === "kk" ? "ru" : "kk",
+                  locale,
+                  page_name: pageName,
+                })
+              }
               className="rounded-md border border-white/35 px-2 py-1 text-sm text-white"
             >
               {locale === "kk" ? "Русский" : "Қазақша"}
@@ -114,9 +154,10 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
             <div className="pr-2">
               <p className="text-sm font-semibold uppercase tracking-[0.14em] text-blue-200">{t.hero.eyebrow}</p>
               <h1 className="mt-3 text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">
-                {t.hero.title}
+                {seoConfig?.h1 ?? t.hero.title}
               </h1>
-              <p className="mt-5 max-w-xl text-base text-blue-100 sm:text-lg">{t.hero.subtitle}</p>
+              <p className="mt-5 max-w-xl text-base text-blue-100 sm:text-lg">{seoConfig?.heroSubtitle ?? t.hero.subtitle}</p>
+              {seoConfig?.seoIntro ? <p className="mt-4 max-w-2xl text-sm text-blue-100">{seoConfig.seoIntro}</p> : null}
 
               <ul className="mt-8 grid gap-2 text-sm sm:grid-cols-2">
                 {t.hero.bullets.map((b) => (
@@ -137,7 +178,7 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
                     onChange={(e) => {
                       const v = e.target.value as AmountBucket;
                       setAmount(v);
-                      track("hero_amount_select", { bucket: v });
+                      track("hero_amount_select", { selected_amount: v, locale, page_name: pageName });
                     }}
                     className="mt-1 h-12 w-full rounded-xl border border-[#C7D6FF] bg-white px-3 font-medium"
                     aria-label={t.quiz.amount}
@@ -156,7 +197,7 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
                     onChange={(e) => {
                       const v = e.target.value as TermBucket;
                       setTerm(v);
-                      track("hero_term_select", { bucket: v });
+                      track("hero_term_select", { selected_term: v, locale, page_name: pageName });
                     }}
                     className="mt-1 h-12 w-full rounded-xl border border-[#C7D6FF] bg-white px-3 font-medium"
                     aria-label={t.quiz.term}
@@ -205,7 +246,8 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
                 affiliate_domain: affiliateDomain,
                 selected_amount: amount,
                 selected_term: term,
-                page_name: "home",
+                page_name: pageName,
+                locale,
                 timestamp: new Date().toISOString(),
               };
               return (
@@ -271,7 +313,7 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
             <button
               onClick={() => {
                 setVisible((v) => v + 3);
-                track("show_more_click", { currentCount: visible });
+                track("show_more_click", { current_count: visible, locale, page_name: pageName });
               }}
               className="mt-5 rounded-xl border border-[#1F4BFF] bg-white px-4 py-2 font-semibold text-[#1F4BFF] transition hover:bg-blue-50"
             >
@@ -307,12 +349,17 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
         <section id="faq" className="rounded-2xl border border-[#DCE5FF] bg-white p-6">
           <h3 className="text-xl font-bold text-[#081A4A]">{t.faq.title}</h3>
           <div className="mt-4 space-y-2">
-            {t.faq.items.map((item, idx) => (
+            {faqItems.map((item, idx) => (
               <details
                 key={item.q}
                 className="rounded-xl border border-[#DCE5FF] p-4"
                 onToggle={(e) =>
-                  track("faq_toggle", { itemId: idx, open: (e.target as HTMLDetailsElement).open })
+                  track("faq_toggle", {
+                    item_id: idx,
+                    open: (e.target as HTMLDetailsElement).open,
+                    locale,
+                    page_name: pageName,
+                  })
                 }
               >
                 <summary className="cursor-pointer font-semibold">{item.q}</summary>
@@ -321,12 +368,40 @@ export function LandingPage({ locale, messages, offers }: { locale: Locale; mess
             ))}
           </div>
         </section>
+
+        {seoConfig ? (
+          <section className="rounded-2xl border border-[#DCE5FF] bg-white p-6 text-sm leading-6 text-[#334155]">
+            <h3 className="text-xl font-bold text-[#081A4A]">SEO</h3>
+            <p className="mt-3">{seoConfig.seoBody}</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {localePages
+                .filter((item) => item.slug !== seoConfig.slug)
+                .map((item) => (
+                  <Link
+                    key={item.slug}
+                    href={`/${item.locale}/${item.slug}`}
+                    className="rounded-full border border-[#C7D6FF] px-3 py-1 text-xs font-semibold text-[#123DB9]"
+                  >
+                    {item.h1}
+                  </Link>
+                ))}
+              {alternateLocaleConfig ? (
+                <Link
+                  href={`/${alternateLocaleConfig.locale}/${alternateLocaleConfig.slug}`}
+                  className="rounded-full border border-[#C7D6FF] px-3 py-1 text-xs font-semibold text-[#123DB9]"
+                >
+                  {alternateLocaleConfig.locale === "kk" ? "Қазақша нұсқа" : "Русская версия"}
+                </Link>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
       </main>
 
       <button
         className="fixed bottom-3 left-3 right-3 z-40 h-12 rounded-xl bg-[#123DB9] font-bold text-white shadow-2xl shadow-blue-900/40 md:hidden"
         onClick={() => {
-          track("sticky_cta_click");
+          track("sticky_cta_click", { locale, page_name: pageName });
           onSubmit();
         }}
       >
