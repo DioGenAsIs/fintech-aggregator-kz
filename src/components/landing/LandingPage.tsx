@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Messages } from "@/lib/messages";
 import type { Locale, AmountBucket, TermBucket } from "@/lib/i18n";
 import type { Offer } from "@/types/offers";
@@ -60,23 +60,51 @@ export function LandingPage({
     "30_plus": t.quiz.term_30_plus,
   }[term];
 
+  const buildOfferTrackingPayload = useCallback(
+    ({
+      offer,
+      offerPosition,
+      affiliateUrl,
+    }: {
+      offer: Offer;
+      offerPosition: number;
+      affiliateUrl: string;
+    }) => ({
+      offer_id: offer.id,
+      offer_name: offer.name,
+      offer_position: offerPosition,
+      affiliate_domain: new URL(affiliateUrl).hostname,
+      selected_amount: amount,
+      selected_term: term,
+      page_name: pageName,
+      locale,
+      timestamp: new Date().toISOString(),
+    }),
+    [amount, locale, pageName, term],
+  );
+
   useEffect(() => {
     track("offers_view", { amountBucket: amount, termBucket: term, locale, page_name: pageName });
   }, [amount, term, track, locale, pageName]);
 
   useEffect(() => {
     currentOffers.forEach((offer, index) => {
+      const affiliateUrl = buildAffiliateUrl({
+        baseUrl: offer.affiliateUrl,
+        offerIdOrName: offer.id,
+        selectedAmount: amount,
+        selectedTerm: term,
+      });
+
       track("offer_impression", {
-        offer_id: offer.id,
-        offer_name: offer.name,
-        offer_position: index + 1,
-        selected_amount: amount,
-        selected_term: term,
-        locale,
-        page_name: pageName,
+        ...buildOfferTrackingPayload({
+          offer,
+          offerPosition: index + 1,
+          affiliateUrl,
+        }),
       });
     });
-  }, [amount, currentOffers, locale, pageName, term, track]);
+  }, [amount, buildOfferTrackingPayload, currentOffers, term, track]);
 
   const onSubmit = () => {
     track("hero_cta_click", {
@@ -238,18 +266,11 @@ export function LandingPage({
               const ctaText = locale === "kk" ? offer.ctaTextKk : offer.ctaTextRu;
               const licenseDisclaimer = locale === "kk" ? offer.licenseDisclaimerKk : offer.licenseDisclaimerRu;
               const offerCard = offerCards[idx];
-              const affiliateDomain = new URL(offerCard.affiliateUrl).hostname;
-              const trackingPayload = {
-                offer_id: offer.id,
-                offer_name: offer.name,
-                offer_position: idx + 1,
-                affiliate_domain: affiliateDomain,
-                selected_amount: amount,
-                selected_term: term,
-                page_name: pageName,
-                locale,
-                timestamp: new Date().toISOString(),
-              };
+              const trackingPayload = buildOfferTrackingPayload({
+                offer,
+                offerPosition: idx + 1,
+                affiliateUrl: offerCard.affiliateUrl,
+              });
               return (
                 <article
                   key={offer.id}
@@ -295,6 +316,7 @@ export function LandingPage({
                     rel="nofollow sponsored noopener noreferrer"
                     onClick={(event) => {
                       event.stopPropagation();
+                      trackEvent("offer_redirect_start", trackingPayload);
                       trackEvent("offer_button_click", trackingPayload);
                     }}
                     className={`flex h-12 items-center justify-center rounded-xl text-sm font-bold text-white transition hover:brightness-110 ${
