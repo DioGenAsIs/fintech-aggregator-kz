@@ -189,7 +189,6 @@ export function LandingPage({
                 {seoConfig?.h1 ?? t.hero.title}
               </h1>
               <p className="mt-5 max-w-xl text-base text-blue-100 sm:text-lg">{seoConfig?.heroSubtitle ?? t.hero.subtitle}</p>
-              {seoConfig?.seoIntro ? <p className="mt-4 max-w-2xl text-sm text-blue-100">{seoConfig.seoIntro}</p> : null}
 
               <ul className="mt-8 grid gap-2 text-sm sm:grid-cols-2">
                 {t.hero.bullets.map((b) => (
@@ -398,7 +397,9 @@ export function LandingPage({
 
         {seoConfig ? (
           <section className="rounded-2xl border border-[#DCE5FF] bg-white p-6 text-sm leading-6 text-[#334155]">
-            <h3 className="text-xl font-bold text-[#081A4A]">SEO</h3>
+            <h3 className="text-xl font-bold text-[#081A4A]">
+              {locale === "kk" ? "Пайдалы ақпарат" : "Полезная информация"}
+            </h3>
             <p className="mt-3">{seoConfig.seoBody}</p>
             <div className="mt-4 flex flex-wrap gap-2">
               {localePages
