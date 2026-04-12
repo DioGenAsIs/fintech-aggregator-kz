@@ -20,7 +20,8 @@ export function middleware(req: NextRequest) {
   }
 
   if (!LOCALE_PREFIX.test(pathname)) {
-    return NextResponse.redirect(new URL(`/kk${pathname}`, req.url));
+    const target = pathname === "/" ? "/kk" : `/kk${pathname}`;
+    return NextResponse.redirect(new URL(target, req.url), 301);
   }
 
   return NextResponse.next();
