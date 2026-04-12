@@ -1,1 +1,2 @@
-# Intentionally left blank. Domain-level redirects are managed in Netlify UI.
+# Redirect every request from the Netlify technical domain to the primary domain.
+/* https://tengimarket.kz/:splat 301! Host=kz-loan-aggregator.netlify.app
