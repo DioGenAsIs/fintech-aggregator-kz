@@ -1,2 +1,1 @@
-# Redirect every request from the Netlify technical domain to the primary domain.
-/* https://tengimarket.kz/:splat 301! Host=kz-loan-aggregator.netlify.app
+https://kz-loan-aggregator.netlify.app/*  https://tengimarket.kz/:splat  301!
