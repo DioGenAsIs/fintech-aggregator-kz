@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const PUBLIC_FILE = /\.(.*)$/;
+const LOCALE_PREFIX = /^\/(kk|ru)(\/|$)/;
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -16,11 +17,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname === "/") {
-    return NextResponse.redirect(new URL("/kk", req.url));
-  }
-
-  if (!pathname.startsWith("/kk") && !pathname.startsWith("/ru")) {
+  if (!LOCALE_PREFIX.test(pathname)) {
     return NextResponse.redirect(new URL(`/kk${pathname}`, req.url));
   }
 
