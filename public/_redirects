@@ -1,2 +1,2 @@
-# Canonicalize Netlify subdomain to primary custom domain
-https://kz-loan-aggregator.netlify.app/* https://tengimarket.kz/:splat 301!
+# Temporarily keep Netlify subdomain reachable while tengimarket.kz TLS is being fixed.
+# Re-enable canonical redirect after SSL certificate/protocol works on https://tengimarket.kz.
