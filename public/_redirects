@@ -1,1 +1,10 @@
-https://kz-loan-aggregator.netlify.app/*  https://tengimarket.kz/:splat  301!
+# Canonical host + HTTPS for production domain
+http://www.tengimarket.kz/* https://tengimarket.kz/:splat 301!
+https://www.tengimarket.kz/* https://tengimarket.kz/:splat 301!
+http://tengimarket.kz/* https://tengimarket.kz/:splat 301!
+
+# Ensure apex root resolves to localized homepage for Netlify domain validation
+https://tengimarket.kz/ /kk 301!
+
+# Canonicalize Netlify subdomain to primary custom domain
+https://kz-loan-aggregator.netlify.app/* https://tengimarket.kz/:splat 301!
