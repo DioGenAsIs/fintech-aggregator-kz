@@ -320,6 +320,7 @@ export function LandingPage({
                     rel="nofollow sponsored noopener noreferrer"
                     onClick={(event) => {
                       event.stopPropagation();
+                      trackEvent("offer_card_click", trackingPayload);
                       trackEvent("offer_redirect_start", trackingPayload);
                       trackEvent("offer_button_click", trackingPayload);
                     }}
