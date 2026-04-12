@@ -118,7 +118,11 @@ export function LandingPage({
     offersRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const switchHref = locale === "kk" ? "/ru" : "/kk";
+  const switchHref = seoConfig && alternateLocaleConfig
+    ? `/${alternateLocaleConfig.locale}/${alternateLocaleConfig.slug}`
+    : locale === "kk"
+      ? "/ru"
+      : "/kk";
   const offerCards = useMemo(() => {
     return currentOffers.map((offer, idx) => {
       const features = locale === "kk" ? offer.featuresKk : offer.featuresRu;
