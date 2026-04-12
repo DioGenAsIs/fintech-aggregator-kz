@@ -1,13 +1,21 @@
-# Tengimarket KZ SEO task (implemented)
+# Tengimarket KZ SEO task (executive summary)
 
-## Приоритетные страницы
-1. `/ru/zaim-online`
-2. `/ru/zaim-na-kartu`
-3. `/kk/mikroqaryz-online`
+## Что реализовано
+- Добавлены **10 SEO-страниц** (5 RU + 5 KK) как копии текущей посадочной логики с индивидуальными SEO-блоками.
+- Приоритетные URL:
+  1. `/ru/zaim-online`
+  2. `/ru/zaim-na-kartu`
+  3. `/kk/mikroqaryz-online`
+- Источники спроса зафиксированы как референсы: **Keyword Planner / Wordstat / GSC**, объёмы трактуются как оценочные диапазоны.
+
+## Параметры
+- Гео: **KZ**
+- Языки: **/ru** и **/kk**
+- Интенты: преимущественно **T** (transactional), частично **C/T**
 
 ## App Router paths
 
-Маршруты генерируются в `src/app/[locale]/[slug]/page.tsx` через `generateStaticParams` на основе `landingPageConfigs`.
+Маршруты генерируются динамически в `src/app/[locale]/[slug]/page.tsx` через `generateStaticParams()` на основе `landingPageConfigs`.
 
 ### RU
 - `/ru/zaim-online`
@@ -23,32 +31,50 @@
 - `/kk/zhedel-mikroqaryz`
 - `/kk/zhalakyga-deiin-karyz`
 
-## Sitemap / robots
-- Добавлен `src/app/sitemap.ts` с приоритетом `0.95` для 3 приоритетных страниц.
-- Добавлен `src/app/robots.ts` с `sitemap` и запретом на `/go/`.
-- В `middleware.ts` добавлены исключения для `/robots.txt` и `/sitemap.xml`.
+## Контентная матрица (по каждой фразе)
 
-## Mermaid (логика генерации SEO-страниц)
-
-```mermaid
-flowchart TD
-    A[Keyword table RU/KK] --> B[landingPageConfigs]
-    B --> C[generateStaticParams]
-    C --> D[/[locale]/[slug] routes]
-    B --> E[generateMetadata title/description]
-    B --> F[LandingPage h1/intro/brief/faq]
-    B --> G[sitemap.xml priorities]
-    H[middleware] --> I[Skip robots/sitemap redirects]
-```
-
-## Контент по фразам
-
-Для каждой фразы в `landingPageConfigs` заданы:
+Для каждой из 10 фраз в `src/lib/landingConfigs.ts` заданы:
 - `title`
 - `description`
 - `h1`
 - `seoIntro`
-- `seoBody` (brief ~150–300 слов)
-- `faqOverrides` (4 вопроса/ответа)
+- `seoBody` (brief 150–300 слов)
+- `faqOverrides` (4 вопроса и 4 ответа)
 
-Источник данных: `src/lib/landingConfigs.ts`.
+### RU фразы
+1. займ онлайн → `zaim-online`
+2. займ на карту → `zaim-na-kartu`
+3. микрозайм онлайн → `mikrozaim-online`
+4. микрозайм без отказа → `mikrozaim-bez-otkaza`
+5. микрозайм срочно → `mikrozaim-srochno`
+
+### KK фразы
+1. микроқарыз онлайн → `mikroqaryz-online`
+2. картаға онлайн микрокредит → `karta-mikrokredit`
+3. онлайн несие → `onlain-nesie`
+4. жедел микроқарыз → `zhedel-mikroqaryz`
+5. жалақыға дейін қарыз → `zhalakyga-deiin-karyz`
+
+## Sitemap / robots
+- `src/app/sitemap.xml/route.ts`
+  - В sitemap включены `/`, `/ru`, `/kk` и все 10 SEO-страниц.
+  - Для приоритетных страниц (`zaim-online`, `zaim-na-kartu`, `mikroqaryz-online`) выставлен `priority=0.95`.
+- `src/app/robots.ts`
+  - Указан sitemap: `/sitemap.xml`
+  - Разрешены индексируемые языковые разделы
+  - Запрещён трекинговый маршрут `/go/`
+- `middleware.ts`
+  - Добавлены исключения для `robots.txt` и `sitemap.xml`, чтобы не ломать SEO-системные маршруты редиректом локали.
+
+## Mermaid (архитектура генерации)
+
+```mermaid
+flowchart TD
+    A[Keyword table RU/KK] --> B[landingPageConfigs]
+    B --> C[generateStaticParams()]
+    C --> D[/[locale]/[slug] pages]
+    B --> E[generateMetadata title/description]
+    B --> F[LandingPage h1/intro/brief/faq]
+    B --> G[sitemap.xml priorities]
+    H[middleware locale redirect] --> I[Skip robots/sitemap routes]
+```
