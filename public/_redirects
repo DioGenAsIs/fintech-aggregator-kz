@@ -1,2 +1,3 @@
 # Temporarily keep Netlify subdomain reachable while tengimarket.kz TLS is being fixed.
 # Re-enable canonical redirect after SSL certificate/protocol works on https://tengimarket.kz.
+https://tengimarket.kz/* https://www.tengimarket.kz/:splat 301!
