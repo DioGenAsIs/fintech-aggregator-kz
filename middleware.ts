@@ -19,9 +19,11 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!LOCALE_PREFIX.test(pathname)) {
+  // Root URL canonicalization/locale redirect is handled at the CDN layer (Netlify)
+  // to avoid temporary redirects (307) in SEO-critical entrypoints.
+  if (pathname !== "/" && !LOCALE_PREFIX.test(pathname)) {
     const url = req.nextUrl.clone();
-    url.pathname = pathname === "/" ? "/kk" : `/kk${pathname}`;
+    url.pathname = `/kk${pathname}`;
     return NextResponse.redirect(url, 301);
   }
 
