@@ -1,3 +1,6 @@
-# Temporarily keep Netlify subdomain reachable while tengimarket.kz TLS is being fixed.
-# Re-enable canonical redirect after SSL certificate/protocol works on https://tengimarket.kz.
+# Root URL: single deterministic permanent redirect to the localized canonical page.
+https://tengimarket.kz/ https://www.tengimarket.kz/kk 301!
+https://www.tengimarket.kz/ /kk 301!
+
+# Canonical host redirect for all non-root paths.
 https://tengimarket.kz/* https://www.tengimarket.kz/:splat 301!
