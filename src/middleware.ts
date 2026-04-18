@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 const PUBLIC_FILE = /\.(.*)$/;
 const LOCALE_PREFIX = /^\/(kk|ru)(\/|$)/;
 
-const CANONICAL_HOST = "tengimarket.kz";
+const CANONICAL_HOST = "www.tengimarket.kz";
 const SUPPORTED_HOSTS = new Set(["tengimarket.kz", "www.tengimarket.kz"]);
 
 function normalizePath(pathname: string): string {
