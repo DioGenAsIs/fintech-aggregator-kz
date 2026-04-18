@@ -4,9 +4,6 @@ import type { NextRequest } from "next/server";
 const PUBLIC_FILE = /\.(.*)$/;
 const LOCALE_PREFIX = /^\/(kk|ru)(\/|$)/;
 
-const CANONICAL_HOST = "www.tengimarket.kz";
-const SUPPORTED_HOSTS = new Set(["tengimarket.kz", "www.tengimarket.kz"]);
-
 function normalizePath(pathname: string): string {
   if (pathname === "/") {
     return pathname;
@@ -28,7 +25,7 @@ function getCanonicalPath(pathname: string): string {
 }
 
 export function middleware(req: NextRequest) {
-  const { pathname, search, protocol } = req.nextUrl;
+  const { pathname } = req.nextUrl;
 
   if (
     pathname.startsWith("/_next") ||
@@ -44,19 +41,12 @@ export function middleware(req: NextRequest) {
 
   const normalizedPath = normalizePath(pathname);
   const canonicalPath = getCanonicalPath(normalizedPath);
-
-  const hostHeader = req.headers.get("host") ?? "";
-  const [hostname = "", port] = hostHeader.split(":");
-  const currentHost = hostname.toLowerCase();
-  const canonicalHostname = SUPPORTED_HOSTS.has(currentHost) ? CANONICAL_HOST : currentHost;
-  const canonicalHost = port ? `${canonicalHostname}:${port}` : canonicalHostname;
-
-  const hostChanged = canonicalHostname !== currentHost;
   const pathChanged = canonicalPath !== pathname;
 
-  if (hostChanged || pathChanged) {
-    const destination = `${protocol}//${canonicalHost}${canonicalPath}${search}`;
-    return NextResponse.redirect(destination, 301);
+  if (pathChanged) {
+    const url = req.nextUrl.clone();
+    url.pathname = canonicalPath;
+    return NextResponse.redirect(url, 301);
   }
 
   return NextResponse.next();
