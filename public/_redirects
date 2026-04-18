@@ -2,5 +2,11 @@
 https://tengimarket.kz/ https://www.tengimarket.kz/kk 301!
 https://www.tengimarket.kz/ /kk 301!
 
+# Locale canonicalization: remove trailing slash at the edge to avoid Next.js 308 hops.
+https://tengimarket.kz/kk/ https://www.tengimarket.kz/kk 301!
+https://www.tengimarket.kz/ru/ https://www.tengimarket.kz/ru 301!
+https://www.tengimarket.kz/kk/ /kk 301!
+https://www.tengimarket.kz/ru/ /ru 301!
+
 # Canonical host redirect for all non-root paths.
 https://tengimarket.kz/* https://www.tengimarket.kz/:splat 301!
