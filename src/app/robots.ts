@@ -6,10 +6,10 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: ["/", "/ru/", "/kk/"],
+      allow: ["/"],
       disallow: ["/go/"],
     },
     sitemap: `${BASE_URL}/sitemap.xml`,
-    host: BASE_URL,
+    host: "tengimarket.kz",
   };
 }
