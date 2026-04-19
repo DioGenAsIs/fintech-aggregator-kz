@@ -1,2 +1,2 @@
-# Redirect and canonical URL logic is centralized in middleware.ts.
-# Keep this file without redirect rules to avoid edge/runtime conflicts.
+http://tengimarket.kz/* https://tengimarket.kz/:splat 301!
+https://www.tengimarket.kz/* https://tengimarket.kz/:splat 301!
