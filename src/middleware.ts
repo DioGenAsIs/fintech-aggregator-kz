@@ -4,7 +4,6 @@ import type { NextRequest } from "next/server";
 const PUBLIC_FILE = /\.(.*)$/;
 const LOCALE_PREFIX = /^\/(kk|ru)(\/|$)/;
 const CANONICAL_HOST = "www.tengimarket.kz";
-const SUPPORTED_HOSTS = new Set(["tengimarket.kz", "www.tengimarket.kz"]);
 
 function normalizePath(pathname: string): string {
   if (pathname === "/") return pathname;
@@ -20,7 +19,6 @@ function getCanonicalPath(pathname: string): string {
 export function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
 
-  // Пропускаем служебные пути
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
@@ -37,15 +35,15 @@ export function middleware(req: NextRequest) {
   const [hostname = ""] = hostHeader.split(":");
   const currentHost = hostname.toLowerCase();
 
+  // Если не canonical host — пропускаем, этим занимается next.config.mjs
+  if (currentHost !== CANONICAL_HOST) {
+    return NextResponse.next();
+  }
+
   const normalizedPath = normalizePath(pathname);
   const canonicalPath = getCanonicalPath(normalizedPath);
 
-  // Всегда используем https и canonical host — один редирект сразу на финал
-  const needsHttps = req.nextUrl.protocol !== "https:";
-  const needsHost = SUPPORTED_HOSTS.has(currentHost) && currentHost !== CANONICAL_HOST;
-  const needsPath = canonicalPath !== pathname;
-
-  if (needsHttps || needsHost || needsPath) {
+  if (canonicalPath !== pathname) {
     const destination = `https://${CANONICAL_HOST}${canonicalPath}${search}`;
     return NextResponse.redirect(destination, { status: 301 });
   }
