@@ -31,11 +31,15 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // Уже с локалью — сразу пропускаем без лишних проверок
+  if (LOCALE_PREFIX.test(pathname)) {
+    return NextResponse.next();
+  }
+
   const hostHeader = req.headers.get("host") ?? "";
   const [hostname = ""] = hostHeader.split(":");
   const currentHost = hostname.toLowerCase();
 
-  // Если не canonical host — пропускаем, этим занимается next.config.mjs
   if (currentHost !== CANONICAL_HOST) {
     return NextResponse.next();
   }
@@ -43,12 +47,8 @@ export function middleware(req: NextRequest) {
   const normalizedPath = normalizePath(pathname);
   const canonicalPath = getCanonicalPath(normalizedPath);
 
-  if (canonicalPath !== pathname) {
-    const destination = `https://${CANONICAL_HOST}${canonicalPath}${search}`;
-    return NextResponse.redirect(destination, { status: 301 });
-  }
-
-  return NextResponse.next();
+  const destination = `https://${CANONICAL_HOST}${canonicalPath}${search}`;
+  return NextResponse.redirect(destination, { status: 301 });
 }
 
 export const config = {
