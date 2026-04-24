@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { GA_MEASUREMENT_ID } from "@/lib/analytics";
 
 const GOOGLE_SITE_VERIFICATION = "y9EdwPcxbsZKW6XOhUYAS2aNgDl-bbBO8fxKkE-xMPg";
 
