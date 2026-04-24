@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description:
     "Быстрый двуязычный подбор онлайн-займов в Казахстане с переходом на сайт кредитора.",
   alternates: {
-    canonical: "https://tengimarket.kz/",
+    canonical: "https://tengimarket.kz/kk",
   },
   verification: {
     google: GOOGLE_SITE_VERIFICATION,
@@ -28,14 +28,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params,
 }: Readonly<{
   children: React.ReactNode;
-  params?: { locale?: string };
 }>) {
-  const lang = params?.locale === "ru" ? "ru" : "kk";
   return (
-    <html lang={lang}>
+    <html lang="kk">
       <body className={`${geistSans.variable} antialiased`}>
         {children}
         <Suspense fallback={null}>
