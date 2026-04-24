@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: "LoanMarket KZ — CPA loan showcase",
   description:
     "Быстрый двуязычный подбор онлайн-займов в Казахстане с переходом на сайт кредитора.",
+  alternates: {
+    canonical: "https://tengimarket.kz/",
+  },
   verification: {
     google: GOOGLE_SITE_VERIFICATION,
   },
@@ -25,14 +28,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params?: { locale?: string };
 }>) {
+  const lang = params?.locale === "ru" ? "ru" : "kk";
   return (
-    <html lang="kk">
+    <html lang={lang}>
       <body className={`${geistSans.variable} antialiased`}>
         {children}
-        <Suspense fallback={null}><AnalyticsRouteTracker /></Suspense>
+        <Suspense fallback={null}>
+          <AnalyticsRouteTracker />
+        </Suspense>
       </body>
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
